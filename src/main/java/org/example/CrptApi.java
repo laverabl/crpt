@@ -19,7 +19,7 @@ public class CrptApi {
 
     private final int requestLimit;
 
-    public CrptApi (TimeUnit timeUnit, int requestLimit) {
+    public CrptApi(TimeUnit timeUnit, int requestLimit) {
         this.httpClient = HttpClient.newHttpClient();
         this.gson = new Gson();
         this.requestLimit = requestLimit;
@@ -44,20 +44,15 @@ public class CrptApi {
 
         Object token = tokenBucket.poll();
 
-        if(token == null) {
-            System.err.println("Failed to create document. Request limit execeeded.");
+        if (token == null) {
+            System.err.println("Failed to create document. Request limit eexeceeded.");
             return;
         }
 
         try {
             String requestBody = gson.toJson(document);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://ismp.crpt.ru/api/v3/lk/documents/create"))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + signature)
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://ismp.crpt.ru/api/v3/lk/documents/create")).header("Content-Type", "application/json").header("Authorization", "Bearer " + signature).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
